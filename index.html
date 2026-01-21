@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Educational Process Platform</title>
+    <style>
+        :root {
+            --primary-color: #800000;
+            --secondary-color: #2c3e50;
+            --accent-color: #718e97;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --bg-color: #f5f5f5;
+            --text-color: #333;
+            --card-bg: white;
+        }
+
+        .dark-mode {
+            --primary-color: #9a0000;
+            --secondary-color: #3d4f60;
+            --accent-color: #819ea7;
+            --light-color: #343a40;
+            --dark-color: #f8f9fa;
+            --bg-color: #121212;
+            --text-color: #f8f9fa;
+            --card-bg: #1e1e1e;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Tajawal', Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Mode switcher buttons */
+        .mode-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+            display: flex;
+            gap: 10px;
+        }
+
+        .mode-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+            .mode-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            }
+
+        /* Navigation bar styles */
+        nav {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+            nav ul {
+                list-style: none;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-wrap: wrap;
+            }
+
+                nav ul li {
+                    margin: 0 1rem;
+                }
+
+                    nav ul li a {
+                        color: white;
+                        text-decoration: none;
+                        font-weight: bold;
+                        font-size: 1.1rem;
+                        padding: 0.5rem 1rem;
+                        border-radius: 5px;
+                        transition: all 0.3s ease;
+                    }
+
+                        nav ul li a:hover {
+                            background-color: rgba(255, 255, 255, 0.2);
+                        }
+
+        /* Main content styles */
+        main {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Home section styles */
+        #home {
+            text-align: center;
+            margin-bottom: 3rem;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s;
+        }
+
+            #home img {
+                max-width: 300px;
+                height: auto;
+                margin-bottom: 1.5rem;
+                transition: transform 0.3s ease;
+            }
+
+                #home img:hover {
+                    transform: scale(1.05);
+                }
+
+            #home h2 {
+                color: var(--primary-color);
+                margin-bottom: 1rem;
+                font-size: 2rem;
+            }
+
+        /* Video section styles */
+        .video-container {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 3rem;
+            transition: background-color 0.3s;
+        }
+
+            .video-container h2 {
+                color: var(--primary-color);
+                margin-bottom: 1.5rem;
+                text-align: center;
+                font-size: 1.8rem;
+                border-bottom: 2px solid var(--accent-color);
+                padding-bottom: 0.5rem;
+                display: inline-block;
+            }
+
+        /* Video selector styles */
+        #videoSelector {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            font-size: 1rem;
+            border: 2px solid var(--accent-color);
+            border-radius: 8px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            margin-bottom: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            #videoSelector:focus {
+                outline: none;
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 3px rgba(109, 24, 101, 0.2);
+            }
+
+        /* Video display styles */
+        .video {
+            display: none;
+            margin-bottom: 2rem;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .video-title {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+            text-align: center;
+        }
+
+        .video iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            margin-bottom: 1rem;
+        }
+
+        /* Contact section styles */
+        #contact {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s;
+        }
+
+            #contact h2 {
+                color: var(--primary-color);
+                margin-bottom: 1rem;
+                font-size: 1.8rem;
+            }
+
+            #contact p {
+                margin-bottom: 1.5rem;
+                font-size: 1.1rem;
+            }
+
+            #contact a {
+                color: var(--primary-color);
+                text-decoration: none;
+                font-weight: bold;
+                transition: color 0.3s ease;
+            }
+
+                #contact a:hover {
+                    color: var(--secondary-color);
+                    text-decoration: underline;
+                }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+            .social-icons a {
+                transition: transform 0.3s ease;
+            }
+
+                .social-icons a:hover {
+                    transform: translateY(-5px);
+                }
+
+            .social-icons img {
+                width: 40px;
+                height: 40px;
+            }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            nav ul li {
+                margin: 0.5rem;
+            }
+
+                nav ul li a {
+                    font-size: 0.9rem;
+                    padding: 0.3rem 0.6rem;
+                }
+
+            main {
+                padding: 1rem;
+            }
+
+            .video iframe {
+                height: 300px;
+            }
+
+            .mode-switcher {
+                top: 10px;
+                right: 10px;
+            }
+
+            .mode-btn {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Footer styles */
+        .developer-credit {
+            text-align: center;
+            margin-top: 2rem;
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+        }
+
+            .developer-credit a {
+                color: var(--primary-color);
+                text-decoration: none;
+                font-weight: bold;
+            }
+
+                .developer-credit a:hover {
+                    text-decoration: underline;
+                }
+
+        /* Login Page Styles */
+        .login-container {
+            width: 900px;
+            max-width: 100%;
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1001;
+            transition: background-color 0.3s;
+        }
+
+        .form-container {
+            display: flex;
+            width: 100%;
+        }
+
+        .left-section {
+            background: #800000;
+            color: #fff;
+            flex: 1;
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-top-right-radius: 120px;
+            border-bottom-right-radius: 120px;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+            .left-section h1 {
+                font-size: 2.2rem;
+                margin-bottom: 10px;
+            }
+
+            .left-section p {
+                margin-bottom: 20px;
+            }
+
+        .register-btn {
+            background: transparent;
+            border: 2px solid #fff;
+            padding: 10px 20px;
+            color: #fff;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .right-section {
+            flex: 2;
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+            .right-section h2 {
+                margin-bottom: 20px;
+                font-size: 1.8rem;
+                color: var(--primary-color);
+            }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+            .input-group input {
+                width: 100%;
+                padding: 12px 40px 12px 15px;
+                border-radius: 10px;
+                border: 1px solid var(--accent-color);
+                outline: none;
+                font-weight: bold;
+                background-color: var(--card-bg);
+                color: var(--text-color);
+            }
+
+        .icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent-color);
+        }
+
+        .forgot {
+            text-align: right;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            color: var(--text-color);
+            text-decoration: none;
+        }
+
+        .login-btn {
+            background-color: #800000;
+            color: #fff;
+            padding: 16px;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+            .login-btn:hover {
+                background-color: #6d0000;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+
+        .or {
+            text-align: center;
+            margin: 10px 0;
+            color: var(--text-color);
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+            .social-icons button {
+                background: transparent;
+                border: 1px solid var(--accent-color);
+                padding: 10px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 1.1rem;
+            }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .login-container {
+                flex-direction: column;
+                width: 90%;
+            }
+
+            .form-container {
+                flex-direction: column;
+            }
+
+            .left-section, .right-section {
+                border-radius: 0;
+                padding: 40px 20px;
+            }
+
+            .left-section {
+                border-top-right-radius: 20px;
+                border-top-left-radius: 20px;
+            }
+
+            .right-section {
+                border-bottom-left-radius: 20px;
+                border-bottom-right-radius: 20px;
+            }
+        }
+
+        .error {
+            color: var(--danger-color);
+            margin-top: 1rem;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+    <!-- Mode Switcher Buttons -->
+    <div class="mode-switcher">
+        <button class="mode-btn" id="lightModeBtn">Light Mode</button>
+        <button class="mode-btn" id="darkModeBtn">Dark Mode</button>
+    </div>
+
+    <main id="main" style="display:none;">
+        <section id="home">
+            <div style="text-align: center;">
+                <img src="https://i.ibb.co/QFVsZJ8V/image-removebg-preview-6.png" alt="Educational Process Platform">
+                <h2>The Process Platform</h2>
+
+                <p style="color: var(--secondary-color); margin-top: 1rem;">"كل ثانية بتذاكر فيها دلوقتي، بتقربك خطوة من حلمك. خليك قوي، وافتكر دايمًا إن التعب بيروح، لكن النتيجة بتفضل."</p>
+                ❤️  بالتوفيق يا باشا
+            </div>
+
+        </section>
+
+        <section id="videos" class="video-container">
+            <!-- This section will be automatically populated after login -->
+            <div style="text-align: center; padding: 2rem;">
+                <h3>Welcome to the Educational Videos Platform</h3>
+                <p>Please login to access the available educational content</p>
+            </div>
+        </section>
+
+        <section id="contact">
+            <h2>Contact Us</h2>
+            <p>If you have any questions or need further information, feel free to contact us at</p>
+            <p><a href="mailto:mamrro8529@gmail.com">mamrro8529@gmail.com</a></p>
+
+            <div class="social-icons">
+                <button style="background-color: transparent; border: none; padding: 10px;">
+                    <a href="https://www.facebook.com/mamro8529?mibextid=ZbWKwL" target="_blank" style="color: var(--text-color); font-size: 30px;">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                </button>
+                <button style="background-color: transparent; border: none; padding: 10px;">
+                    <a href="https://wa.me/message/5LRM2DVHPZQFM1" target="_blank" style="color: var(--text-color); font-size: 30px;">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                </button>
+                <button style="background-color: transparent; border: none; padding: 10px;">
+                    <a href="http://t.me/Mora_mo1" target="_blank" style="color: var(--text-color); font-size: 30px;">
+                        <i class="fab fa-telegram-plane"></i>
+                    </a>
+            </div>
+
+            <div class="developer-credit">
+                <center><strong style="font-size: 17px;">&copy; Developed by Eng: Amr Mohamed</strong></center>
+            </div>
+        </section>
+    </main>
+
+    <div class="login-container" id="loginContainer">
+        <div class="form-container">
+            <div class="left-section">
+                <h1>Hello, Welcome!</h1>
+                <p>Don't have an account?</p>
+                <button class="register-btn" id="registerBtn">Register</button>
+            </div>
+            <div class="right-section">
+                <h2>Login</h2>
+                <form id="loginForm">
+                    <div class="input-group">
+                        <input type="text" id="username" name="username" required placeholder="Enter access code">
+                        <i class="fas fa-user icon"></i>
+                    </div>
+                    <button type="submit" class="login-btn">LOGIN</button>
+                    <div id="errorMessage" class="error"></div>
+                </form>
+                <p class="or">لو واجهتك مشكلة ابعتلي</p>
+
+                <div class="social-icons">
+                    <button style="background-color: transparent; border: none; padding: 10px;">
+                        <a href="https://www.facebook.com/mamro8529?mibextid=ZbWKwL" target="_blank" style="color: var(--text-color); font-size: 30px;">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                    </button>
+                    <button style="background-color: transparent; border: none; padding: 10px;">
+                        <a href="https://wa.me/message/5LRM2DVHPZQFM1" target="_blank" style="color: var(--text-color); font-size: 30px;">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </button>
+                    <button style="background-color: transparent; border: none; padding: 10px;">
+                        <a href="http://t.me/Mora_mo1" target="_blank" style="color: var(--text-color); font-size: 30px;">
+                            <i class="fab fa-telegram-plane"></i>
+                        </a>
+                    </button>
+                </div>
+                <center><strong style="font-size: 17px;">&copy; Developed by Eng: Amr Mohamed</strong></center>
+
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const loginContainer = document.getElementById('loginContainer');
+            const mainContent = document.getElementById('main');
+            const videoContainer = document.getElementById('videos');
+            const registerBtn = document.getElementById('registerBtn');
+            const darkModeBtn = document.getElementById('darkModeBtn');
+            const lightModeBtn = document.getElementById('lightModeBtn');
+
+            // Dark Mode Functionality
+            function enableDarkMode() {
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('darkMode', 'enabled');
+            }
+
+            function disableDarkMode() {
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('darkMode', 'disabled');
+            }
+
+            // Check for saved mode preference
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                enableDarkMode();
+            }
+
+            // Dark mode button click handler
+            darkModeBtn.addEventListener('click', enableDarkMode);
+
+            // Light mode button click handler
+            lightModeBtn.addEventListener('click', disableDarkMode);
+
+            function showLogin() {
+                loginContainer.style.display = 'flex';
+                mainContent.style.display = 'none';
+            }
+
+            function showMainContent() {
+                loginContainer.style.display = 'none';
+                mainContent.style.display = 'block';
+            }
+
+            function loadVideoContent(code) {
+                let videoHTML = '';
+
+                if (code === 'CODE1') {
+                    videoHTML = ` <h2> Homework </h2>
+
+                            <select id="videoSelector" class="form-select">
+
+                            <option value="video1">.....option.....</option>
+                    <option value="video1">Homework 1 </option>
+                    <option value="video2">Homework 2 </option>
+                    <option value="video3">Homework 3</option>
+                    <option value="video4">Homework 4</option>
+                    <option value="video5">Homework 5</option>
+                    <option value="video6">Homework 6</option>
+                    <option value="video7">Homework 7</option>
+                    <option value="video8">Homework 8</option>
+                    <option value="video9">Homework 9</option>
+                    <option value="video10">Homework 10</option>
+                    <option value="video11">Homework 11</option>
+                    <option value="video12">Homework 12</option>
+                    <option value="video13">Homework 13</option>
+                    <option value="video14">Homework 14</option>
+                    <option value="video15">Homework 15</option>
+                    <option value="video16">Homework 16</option>
+                    <option value="video17">Homework 17</option>
+                    <option value="video18">Homework 18</option>
+                </select>
+
+
+
+<div class="video" id="video1" style="display: none;">
+      <h1 class="video-title">Homework 1</h1>
+      <iframe src="https://drive.google.com/file/d/1iiNJqMrDUKkTptUQVymPbMqEyf0UowBB/preview"
+        width="640"
+        height="480"
+        allow="autoplay"
+        allowfullscreen></iframe>
+</div>
+<div class="video" id="video2" style="display: none;">
+      <h1 class="video-title">Homework 2</h1>
+      <iframe src="https://drive.google.com/file/d/1kv5eqpNmC_X2ByBbfoLcXn6WUnA0eYVB/preview"
+        width="640"
+        height="480"
+        allow="autoplay"
+        allowfullscreen></iframe>
+</div>
+<div class="video" id="video3" style="display: none;">
+      <h1 class="video-title">part.1</h1>
+      <iframe src="https://drive.google.com/file/d/1Tf4neobTgDj7nXd9WoUXwNYMLJC-7FJE/preview"
+        width="640"
+        height="480"
+        allow="autoplay"
+        allowfullscreen></iframe>
+
+      <h1 class="video-title">part.2</h1>
+      <iframe src="https://drive.google.com/file/d/1nHPcJfPX1cuC_Quy52RqciSkQZ1UWBdx/preview"
+        width="640"
+        height="480"
+        allow="autoplay"
+        allowfullscreen></iframe>
+</div>
+
+<div class="video" id="video4" style="display: none;">
+      <h1 class="video-title">part 1</h1>
+      <iframe src="https://drive.google.com/file/d/1E_gyIwo2S8t_T5_4Q1XcTvekpPGlXQwg/preview"
+        width="640"
+        height="480"
+        allow="autoplay"
+        allowfullscreen></iframe>
+
+      <h1 class="video-title">part 2</h1>
+      <iframe src="https://drive.google.com/file/d/1JAJoaikg02O7DkbDu3317lMkbjEB_b9I/preview"
+        width="640"
+        height="480"
+        allow="autoplay"
+        allowfullscreen></iframe>
+</div>
+<div class="video" id="video5" style="display: none;">
+      <h1 class="video-title">part 1</h1>
+      <iframe src="https://drive.google.com/file/d/16TMFaBOfkIB6F14NACeqYGnNmQPrFkOh/preview"
+        width="640"
+        height="480"
+        allow="autoplay"
+        allowfullscreen></iframe>
+
+      <h1 class="video-title">part 2</h1>
+      <iframe src="https://drive.google.com/file/d/1VWTzWJ8il2QNceP29XdzYdTEXDL8wYUj/preview"
+        width="640"
+        height="480"
+        allow="autoplay"
+        allowfullscreen></iframe>
+</div>
+
+<div class="video" id="video6" style="display: none;">
+      <h1 class="video-title">Video 6</h1>
+      <iframe src="https://drive.google.com/file/d/1V34aIAOPGhUdRksC7kgEQ8l0s8u1NLhK/preview"
+        width="640"
+        height="480"
+        allow="autoplay"
+        allowfullscreen></iframe>
+</div>
+
+<div class="video" id="video7" style="display: none;">
+      <h1 class="video-title">part 1</h1>
+      <iframe src="https://drive.google.com/file/d/14YFJTqTwknrrSuBAJKzWgI4k3d63omkK/preview"
+        width="640"
+        height="480"
+        allow="autoplay"
+        allowfullscreen></iframe>
+
+      <h1 class="video-title">part 2</h1>
+      <iframe src="https://drive.google.com/file/d/1abKZL-6MOzBIhGAso84HrkwWTgFNPDd-/preview"
+        width="640"
+        height="480"
+        allow="autoplay"
+        allowfullscreen></iframe>
+
+      <h1 class="video-title">part 3</h1>
+      <iframe src="https://drive.google.com/file/d/16b6LqFdMhUW4JtC_JmXpzgk-_0SFt80y/preview"
+        width="640"
+        height="480"
+        allow="autoplay"
+        allowfullscreen></iframe>
+</div>
+<div class="video" id="video8" style="display: none;">
+      <h1 class="video-title">part 1</h1>
+      <iframe src="https://drive.google.com/file/d/165_d1qEaXzl_128dgX4f5Z8PzLNC3I0N/preview"
+        width="640"
+        height="480"
+        allow="autoplay"
+        allowfullscreen></iframe>
+
+      <h1 class="video-title">part 2</h1>
+      <iframe src="https://drive.google.com/file/d/1WJ-WTJ39JMBCsqpqaZpC1zM7TIVXA4Fz/preview"
+        width="640"
+        height="480"
+        allow="autoplay"
+        allowfullscreen></iframe>
+</div>
+
+<div class="video" id="video9" style="display: none;">
+      <h1 class="video-title">part 1</h1>
+      <iframe src="https://drive.google.com/file/d/1dy9Ze_jxwiPP1NfFo8n2HqPQqzqMrHWj/preview"
+        width="640"
+        height="480"
+        allow="autoplay"
+        allowfullscreen></iframe>
+
+      <h1 class="video-title">part 2</h1>
+      <iframe src="https://drive.google.com/file/d/12gBF4QqYN6Fie-9Nc8Z4SHkODm4zU2cn/preview"
+        width="640"
+        height="480"
+        allow="autoplay"
+        allowfullscreen></iframe>
+</div>
+
+<div class="video" id="video10" style="display: none;">
+      <h1 class="video-title">part 1</h1>
+      <iframe src="https://drive.google.com/file/d/1TCtZ7qxH-mOzrFLkCrI8peKhF6SPnk9d/preview"
+        width="640"
+        height="480"
+        allow="autoplay"
+        allowfullscreen></iframe>
+
+      <h1 class="video-title">part 2</h1>
+      <iframe src="https://drive.google.com/file/d/1E8yhjJ-b0D2wm-0IR6v54GPxQfYHrbGQ/preview"
+        width="640"
+        height="480"
+        allow="autoplay"
+        allowfullscreen></iframe>
+</div>
+
+<div class="video" id="video11" style="display: none;">
+      <h1 class="video-title">part 1</h1>
+      <iframe src="https://drive.google.com/file/d/1Rb-r7OXwGlfM8kUTwu_eoyUBIAYKF8rq/preview"
+        width="640"
+        height="480"
+        allow="autoplay"
+        allowfullscreen></iframe>
+
+      <h1 class="video-title">part 2</h1>
+      <iframe src="https://drive.google.com/file/d/1Zrk4bfFucA3nwa77cSjYEdK-NEAPDO_W/preview"
+        width="640"
+        height="480"
+        allow="autoplay"
+        allowfullscreen></iframe>
+
+      <h1 class="video-title">part 3</h1>
+      <iframe src="https://drive.google.com/file/d/1DqwIeC3-J1zOyLF_LzDOh9rCMQIlLmBS/preview"
+        width="640"
+        height="480"
+        allow="autoplay"
+        allowfullscreen></iframe>
+</div>
+
+<div class="video" id="video12" style="display: none;">
+      <h1 class="video-title">part 1</h1>
+      <iframe src="https://drive.google.com/file/d/1P8QDspeIW6rc5ciD5GXSNu2hErRsz55L/preview"
+        width="640"
+        height="480"
+        allow="autoplay"
+        allowfullscreen></iframe>
+
+      <h1 class="video-title">part 2</h1>
+      <iframe src="https://drive.google.com/file/d/1q9eGKbtTZGuzqPGeLwgRZZtWGTkNEAjr/preview"
+        width="640"
+        height="480"
+        allow="autoplay"
+        allowfullscreen></iframe>
+</div>
+
+<div class="video" id="video13" style="display: none;">
+      <h1 class="video-title">part1</h1>
+      <iframe src="https://drive.google.com/file/d/1Do8m1xQ-tEn7U4_5xAtKNjZ2VOHiw5xU/preview"
+        width="640"
+        height="480"
+        allow="autoplay"
+        allowfullscreen></iframe>
+
+      <h1 class="video-title">part2</h1>
+      <iframe src="https://drive.google.com/file/d/1JQV3sNeHpJswUg0ebNniRR9CcwO3VTWC/preview"
+        width="640"
+        height="480"
+        allow="autoplay"
+        allowfullscreen></iframe>
+
+      <h1 class="video-title">part3</h1>
+      <iframe src="https://drive.google.com/file/d/1FRCVhqYZlRqCLw9XLiEpaPCSlKc22Kzn/preview"
+        width="640"
+        height="480"
+        allow="autoplay"
+        allowfullscreen></iframe>
+</div>
+
+<div class="video" id="video14" style="display: none;">
+      <h1 class="video-title">part 1</h1>
+      <iframe src="https://drive.google.com/file/d/1zgNhFXQY7pO6fbNFBVh_ClAfG5P12J0O/preview"
+        width="640"
+        height="480"
+        allow="autoplay"
+        allowfullscreen></iframe>
+
+      <h1 class="video-title">part 2</h1>
+      <iframe src="https://drive.google.com/file/d/1EEKW1SvwYJDpFfWzfay2hCushhiXUP1v/preview"
+        width="640"
+        height="480"
+        allow="autoplay"
+        allowfullscreen></iframe>
+
+      <h1 class="video-title">part 3</h1>
+      <iframe src="https://drive.google.com/file/d/1NUJF2103h1BTxWlhtVUuhZsUwraul30M/preview"
+        width="640"
+        height="480"
+        allow="autoplay"
+        allowfullscreen></iframe>
+</div>
+
+<div class="video" id="video15" style="display: none;">
+      <h1 class="video-title">part 1</h1>
+      <iframe src="https://drive.google.com/file/d/1okTYOXI6vh2za5NDNZyOQHxshAODWqmU/preview"
+        width="640"
+        height="480"
+        allow="autoplay"
+        allowfullscreen></iframe>
+
+      <h1 class="video-title">part 2</h1>
+      <iframe src="https://drive.google.com/file/d/1PgYZv__rwa_sYhJFrT4K2JQaKS4qWRwT/preview"
+        width="640"
+        height="480"
+        allow="autoplay"
+        allowfullscreen></iframe>
+</div>
+<div class="video" id="video16" style="display: none;">
+      <h1 class="video-title">part 1</h1>
+      <iframe src="https://drive.google.com/file/d/1_LEoc0bVmKS0Zi-D6t7rJ7lJcvivsezI/preview"
+        width="640"
+        height="480"
+        allow="autoplay"
+        allowfullscreen></iframe>
+
+      <h1 class="video-title">part 2</h1>
+      <iframe src="https://drive.google.com/file/d/19QeFa6xHPPIfQ1O8WJ3jpxeQi84hUD_J/preview"
+        width="640"
+        height="480"
+        allow="autoplay"
+        allowfullscreen></iframe>
+</div>
+
+<div class="video" id="video17" style="display: none;">
+      <h1 class="video-title">part 1</h1>
+      <iframe src="https://drive.google.com/file/d/1IpxleKUMyBld3Dov8aiIi5L4JKL9pi0d/preview"
+        width="640"
+        height="480"
+        allow="autoplay"
+        allowfullscreen></iframe>
+
+      <h1 class="video-title">part 2</h1>
+      <iframe src="https://drive.google.com/file/d/15Zz9Rh_lSXMdokdjd8TXiRoZwtMfjlKE/preview"
+        width="640"
+        height="480"
+        allow="autoplay"
+        allowfullscreen></iframe>
+</div>
+
+
+
+                        `;
+                }
+                videoContainer.innerHTML = videoHTML;
+
+                const videoSelector = document.getElementById('videoSelector');
+                if (videoSelector) {
+                    videoSelector.addEventListener('change', function () {
+                        const selectedVideo = videoSelector.value;
+                        const videos = document.querySelectorAll('.video');
+                        videos.forEach(video => video.style.display = 'none');
+                        const videoToShow = document.getElementById(selectedVideo);
+                        if (videoToShow) {
+                            videoToShow.style.display = 'block';
+                        }
+                    });
+                }
+            }
+
+            // Register button functionality
+            registerBtn.addEventListener('click', function (event) {
+                event.preventDefault();
+                window.open('https://docs.google.com/forms/d/e/1FAIpQLSfaVuh5uR-FlSdpPyEGYXYc5VqGeYAlYtoHU3JuKtCrehf3gw/viewform?usp=header', '_blank');
+            });
+
+            document.getElementById('loginForm').addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                const username = document.getElementById('username').value.trim();
+                const errorMessage = document.getElementById('errorMessage');
+
+                const validUsernames = {
+                    'CODE1': ['17026', '17053', '17074', '17243', '17247', '17262', '17291', '17381', '17436', '17752', '17882', '17606', '17205', '17843', '17869', '17224', '17624', '19753', '17286', '17495', '17639', '17486', '17893', '17538', '17428', '17438', '17803', '17737', '17539', '17534']
+
+                    
+
+
+
+
+
+                };
+                let code = '';
+                for (const [key, values] of Object.entries(validUsernames)) {
+                    if (values.includes(username)) {
+                        code = key;
+                        break;
+                    }
+                }
+
+                if (code) {
+                    errorMessage.textContent = '';
+                    loadVideoContent(code);
+                    showMainContent();
+
+                    // Scroll to videos section
+                    document.getElementById('videos').scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    errorMessage.textContent = 'Invalid access code, please try again';
+                }
+            });
+
+            showLogin();
+        });
+    </script>
+</body>
+</html>
